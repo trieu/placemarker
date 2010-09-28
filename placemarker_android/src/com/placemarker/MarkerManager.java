@@ -45,26 +45,22 @@ public class MarkerManager implements Plugin {
 
 	public void onActivityResult(int arg0, int arg1, Intent arg2) {
 		// TODO Auto-generated method stub
-
 	}
 
 	public void onDestroy() {
 		// TODO Auto-generated method stub
-
 	}
 
 	public void onPause() {
 		// TODO Auto-generated method stub
-
 	}
 
 	public void onResume() {
 		// TODO Auto-generated method stub
-
 	}
 
 	public void setContext(DroidGap droidGap) {
-		this.ctx = droidGap;
+		ctx = droidGap;
 	}
 
 	public void setView(WebView webView) {
