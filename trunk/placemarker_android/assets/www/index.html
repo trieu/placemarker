@@ -20,7 +20,8 @@
     
     var getLocation = function() {
       var suc = function(p){
-		    alert(p.coords.latitude + " " + p.coords.longitude);
+		    //alert(p.coords.latitude + " " + p.coords.longitude);
+		    showMap(p.coords.latitude, p.coords.longitude)
       };
       var fail = function(){};
       navigator.geolocation.getCurrentPosition(suc,fail);
@@ -112,6 +113,12 @@
 	{		
 		alert(contacts.length);
 	}
+
+	function showMap(lat,lgn){
+		//10.787877,106.685078
+		var ll = lat+','+lgn;
+		$('#theMapView').attr('src','http://maps.google.com/?ie=UTF8&hq=&ll='+ll+'&spn=0.012415,0.027466&z=15').show();
+	}
   	
 	function init(){
 		document.addEventListener("touchmove", preventBehavior, false);
@@ -141,6 +148,10 @@
     <a href="#" class="btn large" onclick="vibrate();">Vibrate</a>
     <a href="#" class="btn large" onclick="show_pic();">Get a Picture</a>
     <a href="#" class="btn large" onclick="get_contacts();">Get phone's contacts</a>
+    
+    <a href="#" class="btn large" onclick="showMap('10.787877','106.685078');">showMap</a>
+    <iframe id="theMapView" style="display: none;margin-top: 20px;" height="400" width="320" src=""></iframe>
+    
     <div id="viewport" class="viewport" style="display: none;">       
       <img style="width:60px;height:60px" id="test_img" src="" />
     </div> 
