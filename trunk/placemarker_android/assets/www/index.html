@@ -4,9 +4,13 @@
     <meta name="viewport" content="width=320; user-scalable=no" />
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title>PhoneGap</title>
-	  <link rel="stylesheet" href="master.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	  <script type="text/javascript" charset="utf-8" src="phonegap.js"></script>	  
-	  <script type="text/javascript" charset="utf-8">
+	<link rel="stylesheet" href="master.css" type="text/css" media="screen" title="no title" charset="utf-8">
+	<script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+	<script type="text/javascript" charset="utf-8" src="jquery.json.js"></script>
+	
+	<script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+	
+	<script type="text/javascript" charset="utf-8">
 	  
     var deviceInfo = function(){      
       document.getElementById("platform").innerHTML = device.platform;
@@ -101,7 +105,7 @@
 
 	function get_contacts()
 	{
-		navigator.ContactManager.getAllContacts(count_contacts, fail, null);		
+		navigator.ContactManager.getContactsAndSendBack(count_contacts, fail, null);		
 	}
 
 	function count_contacts(contacts)
@@ -111,7 +115,8 @@
   	
 	function init(){
 		document.addEventListener("touchmove", preventBehavior, false);
-		document.addEventListener("deviceready", deviceInfo, true);		
+		document.addEventListener("deviceready", deviceInfo, true);	
+		PhoneGap.exec("MarkerManager" , "sayHi", ["Trieu",13] );
 	}	
 	
   </script>
