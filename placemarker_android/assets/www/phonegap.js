@@ -280,7 +280,7 @@ document.addEventListener = function(evt, handler, capture) {
  * @return
  */
 PhoneGap.stringify = function(args) {
-    if (typeof JSON == "undefined") {
+    if (typeof jQuery == "undefined") {
         var s = "[";
         for (var i=0; i<args.length; i++) {
             if (i > 0) {
@@ -298,7 +298,7 @@ PhoneGap.stringify = function(args) {
         return s;
     }
     else {
-        return JSON.stringify(args);
+    	 return jQuery.toJSON(args);
     }
 };
 
