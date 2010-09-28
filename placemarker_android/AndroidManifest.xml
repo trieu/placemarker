@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.phonegap.placemarker" android:versionName="1.1" android:versionCode="1">
+      package="com.placemarker" android:versionName="1.1" android:versionCode="1">
     <supports-screens
     	android:largeScreens="true"
     	android:normalScreens="true"
@@ -24,8 +24,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     
     <application android:icon="@drawable/icon" android:label="@string/app_name"
-    	android:debuggable="false">
-        <activity android:name=".placemarker"
+    	android:debuggable="true">
+        <activity android:name="com.phonegap.placemarker.PlaceMarkerApp"
                   android:label="@string/app_name" android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
