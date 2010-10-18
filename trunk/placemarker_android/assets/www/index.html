@@ -11,6 +11,7 @@
 		<script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
 	
 	<script type="text/javascript" charset="utf-8">
+		var watchID = null;
 		  
 	    var getLocation = function(mode) {
 	    	//var loc_des = prompt("Location description", "");
@@ -25,8 +26,8 @@
 			    	showMap($('#theMapView'),'mobileApp=true&ll=' + ll);
 			    }
 	      };
-	      var fail = function(){};
-	      navigator.geolocation.getCurrentPosition(suc,fail);
+	      var fail = function(){ alert('getCurrentPosition failed!');};
+	      navigator.geolocation.getCurrentPosition(suc,fail,{enableHighAccuracy:true});
 	    }
 
 	    function mapLoaded(node) {
@@ -37,19 +38,43 @@
 			var map_url = "http://drd-vn-database.com/mobile/v_map_mobile.html?" + params;
 			$(node).attr('src',map_url).show();
 		}
-	  	
-		function init(){
-			showMap($('#theMapView'),'mobileApp=true');
-		}	
-		
+
+	    // PhoneGap is ready
+	    //
+	    function onDeviceReady() {
+	    	showMap($('#theMapView'),'mobileApp=true');
+	        var options = { frequency: 5000 , enableHighAccuracy:true};  // Update every 5 seconds
+	        watchID = navigator.geolocation.watchPosition(onwWatchPositionSuccess, onwWatchPositionError, options);
+	    }
+
+	    function onLocationChanged(latitude, longitude ) {
+	        var element = document.getElementById('geolocation');
+	        element.innerHTML = 'LocationChanged, Latitude: '  + latitude + ', ' + 'Longitude: ' + longitude + '<hr />';
+	    }
+
+	    function onwWatchPositionSuccess(position) {
+	        var element = document.getElementById('geolocation');
+	        element.innerHTML = 'Latitude: '  + position.coords.latitude + ', Longitude: ' + position.coords.longitude + '<hr />';
+	    }
+
+	    function onwWatchPositionError(error) {
+	    	// onError Callback receives a PositionError object
+	        alert('code: '    + error.code    + '\n' +
+	              'message: ' + error.message + '\n');
+	    }
+				
+		function onLoad(){
+			document.addEventListener("deviceready", onDeviceReady, false);
+		}
 	  </script>
 	</head>
-	<body onload="init();" id="stage" class="theme">
-		<h3>Welcome to The Placemarker App!</h3>
-		<a href="#" class="btn large" onclick="getLocation('read');">Get My Location</a>
-		<a href="#" class="btn large" onclick="getLocation('save');">Save My Location</a>
-		
-		<iframe onload="mapLoaded(this)" id="theMapView" style="display: none;margin-top: 20px;width:97%" height="650" src="" ></iframe>
+	<body onload="onLoad();" id="stage" class="theme">
+		<h4>Welcome to The Placemarker App!</h4>
+		<p id="geolocation">Watching geolocation...</p>
+		<a href="#" class="btn " onclick="getLocation('read');">Get My Location</a>
+		<a href="#" class="btn " onclick="getLocation('save');">Save My Location</a>
+		<hr />
+		<iframe onload="mapLoaded(this)" id="theMapView" style="display: none;margin-top: 20px;width:97%" height="600" src="" ></iframe>
 	
 	</body>
 </html>
