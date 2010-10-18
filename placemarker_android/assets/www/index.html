@@ -1,159 +1,55 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
-  <head>
-    <meta name="viewport" content="width=320; user-scalable=no" />
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    <title>PhoneGap</title>
-	<link rel="stylesheet" href="master.css" type="text/css" media="screen" title="no title" charset="utf-8">
-	<script type="text/javascript" charset="utf-8" src="jquery.js"></script>
-	<script type="text/javascript" charset="utf-8" src="jquery.json.js"></script>
-	
-	<script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
+	<head>
+		<meta name="viewport" content="width=480; user-scalable=no" />
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<title>The Placemarker App</title>
+		<link rel="stylesheet" href="master.css" type="text/css" media="screen" title="no title" charset="utf-8">
+		<script type="text/javascript" charset="utf-8" src="jquery.js"></script>
+		<script type="text/javascript" charset="utf-8" src="jquery.json.js"></script>
+		
+		<script type="text/javascript" charset="utf-8" src="phonegap.js"></script>
 	
 	<script type="text/javascript" charset="utf-8">
-	  
-    var deviceInfo = function(){      
-      document.getElementById("platform").innerHTML = device.platform;
-      document.getElementById("version").innerHTML = device.version;
-      document.getElementById("uuid").innerHTML = device.uuid;
-    }
-    
-    var getLocation = function() {
-      var suc = function(p){
-		    //alert(p.coords.latitude + " " + p.coords.longitude);
-		    showMap(p.coords.latitude, p.coords.longitude)
-      };
-      var fail = function(){};
-      navigator.geolocation.getCurrentPosition(suc,fail);
-    }
-    
-    var beep = function(){
-	    navigator.notification.beep(2);
-    }
+		  
+	    var getLocation = function(mode) {
+	    	//var loc_des = prompt("Location description", "");
+	    	//showMap($('#theMapView'),'mode=save&loc_des='+ loc_des +'&mobileApp=true&ll=10.7702,106.708338');
+	      var suc = function(p){
+			    //alert(p.coords.latitude + " " + p.coords.longitude);
+			    var ll = p.coords.latitude + "," + p.coords.longitude;
+			    if(mode == "save") {
+			    	var loc_des = prompt("Location description", "");
+			    	showMap($('#theMapView'),'mode=save&loc_des='+ loc_des +'&mobileApp=true&ll=' + ll);
+			    } else {
+			    	showMap($('#theMapView'),'mobileApp=true&ll=' + ll);
+			    }
+	      };
+	      var fail = function(){};
+	      navigator.geolocation.getCurrentPosition(suc,fail);
+	    }
+
+	    function mapLoaded(node) {
+		    
+	    }
 	
-  	var vibrate = function(){
-  	  navigator.notification.vibrate(0);
-  	}
+		function showMap(node,params){
+			var map_url = "http://drd-vn-database.com/mobile/v_map_mobile.html?" + params;
+			$(node).attr('src',map_url).show();
+		}
+	  	
+		function init(){
+			showMap($('#theMapView'),'mobileApp=true');
+		}	
+		
+	  </script>
+	</head>
+	<body onload="init();" id="stage" class="theme">
+		<h3>Welcome to The Placemarker App!</h3>
+		<a href="#" class="btn large" onclick="getLocation('read');">Get My Location</a>
+		<a href="#" class="btn large" onclick="getLocation('save');">Save My Location</a>
+		
+		<iframe onload="mapLoaded(this)" id="theMapView" style="display: none;margin-top: 20px;width:97%" height="650" src="" ></iframe>
 	
-  	var getContact = function(){
-  	  var suc = function(c){ alert("Contact 4: " + c.contacts[3].name); };
-  		var fail = function(){};
-  		navigator.ContactManager.get(suc, fail);
-  	}
-  	
-  	var watchAccel = function() {
-  		var suc = function(a){
-  			document.getElementById('x').innerHTML = roundNumber(a.x);
-  			document.getElementById('y').innerHTML = roundNumber(a.y);
-  			document.getElementById('z').innerHTML = roundNumber(a.z);
-  		};
-  		var fail = function(){};
-  		var opt = {};
-  		opt.frequency = 100;
-  		timer = navigator.accelerometer.watchAcceleration(suc,fail,opt);
-  	}
-    	
-    function roundNumber(num) {
-      var dec = 3;
-      var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
-      return result;
-    }
-    
-	var preventBehavior = function(e) { 
-      e.preventDefault(); 
-    };
-
-    function show_pic()
-    {
-      var viewport = document.getElementById('viewport');
-      viewport.style.display = "";
-      navigator.camera.getPicture(dump_pic, fail, { quality: 50 }); 
-    }
-
-    function dump_pic(data)
-    {
-      var viewport = document.getElementById('viewport');
-      console.log(data);
-      viewport.style.display = "";
-      viewport.style.position = "absolute";
-      viewport.style.top = "10px";
-      viewport.style.left = "10px";
-      document.getElementById("test_img").src = "data:image/jpeg;base64," + data;
-    }
-
-    function close()
-    {
-      var viewport = document.getElementById('viewport');
-      viewport.style.position = "relative";
-      viewport.style.display = "none";
-    }
-
-    function fail(fail)
-    {
-      alert(fail);
-    }
-
-  	// This is just to do this.
-  	function readFile()
-  	{  	
-   		navigator.file.read('/sdcard/phonegap.txt', fail , fail);
-  	}
-
-  	function writeFile()
-  	{
-  	  	navigator.file.write('foo.txt', "This is a test of writing to a file", fail, fail);
-  	}
-
-	function get_contacts()
-	{
-		navigator.ContactManager.getContactsAndSendBack(count_contacts, fail, null);		
-	}
-
-	function count_contacts(contacts)
-	{		
-		alert(contacts.length);
-	}
-
-	function showMap(lat,lgn){
-		//10.787877,106.685078
-		var ll = lat+','+lgn;
-		$('#theMapView').attr('src','http://maps.google.com/?ie=UTF8&hq=&ll='+ll+'&spn=0.012415,0.027466&z=15').show();
-	}
-  	
-	function init(){
-		document.addEventListener("touchmove", preventBehavior, false);
-		document.addEventListener("deviceready", deviceInfo, true);	
-		PhoneGap.exec("MarkerManager" , "sayHi", ["Trieu",13] );
-	}	
-	
-  </script>
-  </head>
-  <body onload="init();" id="stage" class="theme">
-    <h1>Welcome to PhoneGap!</h1>
-    <h2>this file is located at assets/index.html</h2>
-    <div id="info">
-      <h4>Platform: <span id="platform">&nbsp;</span></h4>
-      <h4>Version: <span id="version">&nbsp;</span></h4>
-      <h4>UUID:   <span id="uuid">&nbsp;</span></h4>
-    </div>
-    <dl id="accel-data">
-      <dt>X:</dt><dd id="x">&nbsp;</dd>
-      <dt>Y:</dt><dd id="y">&nbsp;</dd>
-      <dt>Z:</dt><dd id="z">&nbsp;</dd>
-    </dl>
-    <a href="#" class="btn large" onclick="watchAccel();">Watch Accelerometer</a>
-    <a href="#" class="btn large" onclick="getLocation();">Get Location</a>
-	<a href="tel://411" class="btn large">Call 411</a>
-    <a href="#" class="btn large" onclick="beep();">Beep</a>
-    <a href="#" class="btn large" onclick="vibrate();">Vibrate</a>
-    <a href="#" class="btn large" onclick="show_pic();">Get a Picture</a>
-    <a href="#" class="btn large" onclick="get_contacts();">Get phone's contacts</a>
-    
-    <a href="#" class="btn large" onclick="showMap('10.787877','106.685078');">showMap</a>
-    <iframe id="theMapView" style="display: none;margin-top: 20px;" height="400" width="320" src=""></iframe>
-    
-    <div id="viewport" class="viewport" style="display: none;">       
-      <img style="width:60px;height:60px" id="test_img" src="" />
-    </div> 
-  </body>
+	</body>
 </html>
