@@ -22,16 +22,26 @@
 			    if(mode == "save") {
 			    	var loc_des = prompt("Location description", "");
 			    	showMap($('#theMapView'),'mode=save&loc_des='+ loc_des +'&mobileApp=true&ll=' + ll);
-			    } else {
-			    	showMap($('#theMapView'),'mobileApp=true&ll=' + ll);
+			    } else {			    	
+			    	if($(node).attr('src').length > 0){
+			    		$('#theMapView')[0].contentWindow.updateRootMarker(p.coords.latitude, p.coords.longitude);
+			    	} else {
+			    		showMap($('#theMapView'),'mobileApp=true&ll=' + ll);
+			    	}
 			    }
 	      };
 	      var fail = function(){ alert('getCurrentPosition failed!');};
 	      navigator.geolocation.getCurrentPosition(suc,fail,{enableHighAccuracy:true});
 	    }
 
+	    function test1(){
+	    	$('#theMapView')[0].contentWindow.updateRootMarker(10.7902,106.18338);		    
+		}
+
 	    function mapLoaded(node) {
-		    
+		    try {
+			    
+		    } catch(e) {alert(e.message);}
 	    }
 	
 		function showMap(node,params){
@@ -43,8 +53,8 @@
 	    //
 	    function onDeviceReady() {
 	    	showMap($('#theMapView'),'mobileApp=true');
-	        var options = { frequency: 5000 , enableHighAccuracy:true};  // Update every 5 seconds
-	        watchID = navigator.geolocation.watchPosition(onwWatchPositionSuccess, onwWatchPositionError, options);
+	        var options = { frequency: 8000 , enableHighAccuracy:true};  // Update every 8 seconds
+	        watchID = navigator.geolocation.watchPosition(onWatchPositionSuccess, onWatchPositionError, options);
 	    }
 
 	    function onLocationChanged(latitude, longitude ) {
@@ -52,29 +62,34 @@
 	        element.innerHTML = 'LocationChanged, Latitude: '  + latitude + ', ' + 'Longitude: ' + longitude + '<hr />';
 	    }
 
-	    function onwWatchPositionSuccess(position) {
-	        var element = document.getElementById('geolocation');
-	        element.innerHTML = 'Latitude: '  + position.coords.latitude + ', Longitude: ' + position.coords.longitude + '<hr />';
+	    function onWatchPositionSuccess(position) {
+		    try {
+		        var element = document.getElementById('geolocation');
+		        element.innerHTML = 'Latitude: '  + position.coords.latitude + ', Longitude: ' + position.coords.longitude + '<hr />';
+		        $('#theMapView')[0].contentWindow.updateRootMarker(position.coords.latitude, position.coords.longitude);
+		    } catch(e) {alert(e.message);}
 	    }
 
-	    function onwWatchPositionError(error) {
+	    function onWatchPositionError(error) {
 	    	// onError Callback receives a PositionError object
 	        alert('code: '    + error.code    + '\n' +
 	              'message: ' + error.message + '\n');
 	    }
 				
-		function onLoad(){
+		function onLoad(){			
 			document.addEventListener("deviceready", onDeviceReady, false);
 		}
+
+		$(document).ready(function(){
+						
+		});
 	  </script>
 	</head>
 	<body onload="onLoad();" id="stage" class="theme">
-		<h4>Welcome to The Placemarker App!</h4>
+		<h4>Placemarker</h4>
 		<p id="geolocation">Watching geolocation...</p>
 		<a href="#" class="btn " onclick="getLocation('read');">Get My Location</a>
 		<a href="#" class="btn " onclick="getLocation('save');">Save My Location</a>
-		<hr />
-		<iframe onload="mapLoaded(this)" id="theMapView" style="display: none;margin-top: 20px;width:97%" height="600" src="" ></iframe>
-	
+		<iframe onload="mapLoaded(this)" id="theMapView" style="display: none;margin-top: 20px;width:97%" height="500" src="" ></iframe>
 	</body>
 </html>
