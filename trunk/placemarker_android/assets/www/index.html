@@ -54,6 +54,10 @@
 		    function onDeviceReady() {
 		        var options = { frequency: 8000 , enableHighAccuracy:true};  // Update every 8 seconds
 		        watchID = navigator.geolocation.watchPosition(onWatchPositionSuccess, onWatchPositionError, options);
+
+		        var success = function(rs){  };
+		        var fail = function(rs){  }; 
+		        PhoneGap.exec(success, fail, "MarkerManager", "sayHi", ['Trieu']);
 		    }
 	
 		    function onLocationChanged(latitude, longitude ) {

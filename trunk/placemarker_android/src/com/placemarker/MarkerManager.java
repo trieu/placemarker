@@ -4,10 +4,7 @@ import java.lang.reflect.Method;
 
 import org.json.JSONArray;
 
-import android.content.Context;
-import android.content.Intent;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,24 +14,25 @@ import com.phonegap.DroidGap;
 import com.phonegap.api.Plugin;
 import com.phonegap.api.PluginResult;
 
-public class MarkerManager implements Plugin, LocationListener {
+public class MarkerManager extends Plugin {
 	private DroidGap ctx;
 	private WebView webView;
 	private LocationManager lm;
 
 	public MarkerManager() {
 		Log.i("#### MarkerManager","init");
-	//	lm = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
-	//	lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1l,1l, this);
+		//	lm = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
+		//	lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1l,1l, this);
 	}
 
-	public PluginResult execute(String action, JSONArray args) {
+	@Override
+	public PluginResult execute(String action, JSONArray args, String callbackId) {
 		Log.i("#### MarkerManager", action);
 		Log.i("### MarkerManager", args.toString());
 		try {
 			Method method = this.getClass().getDeclaredMethod(action, String.class);
 			Object result = method.invoke(this, args.getString(0));
-			webView.loadUrl("javascript: alert('" + result + "!');");
+			webView.loadUrl("javascript: navigator.notification.alert('" + result + "!');");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -46,31 +44,14 @@ public class MarkerManager implements Plugin, LocationListener {
 		return "Hi, " + name;
 	}
 
-	public boolean isSynch(String arg0) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
-	public void onActivityResult(int arg0, int arg1, Intent arg2) {
-		// TODO Auto-generated method stub
-	}
 
-	public void onDestroy() {
-		// TODO Auto-generated method stub
-	}
-
-	public void onPause() {
-		// TODO Auto-generated method stub
-	}
-
-	public void onResume() {
-		// TODO Auto-generated method stub
-	}
-
+	@Override
 	public void setContext(DroidGap droidGap) {
 		ctx = droidGap;
 	}
 
+	@Override
 	public void setView(WebView webView) {
 		this.webView = webView;
 	}
@@ -84,17 +65,18 @@ public class MarkerManager implements Plugin, LocationListener {
 
 	public void onProviderDisabled(String provider) {
 		Log.e("GPS", "provider disabled " + provider);
-		
+
 	}
 
 	public void onProviderEnabled(String provider) {
 		Log.e("GPS", "provider enabled " + provider);
-		
+
 	}
 
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		Log.e("GPS", "status changed to " + provider + " [" + status + "]");
-		
+
 	}
+
 
 }
