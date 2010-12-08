@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 import javax.swing.JFrame;
 
 /**
+ *
  * @author tantrieuf31@gmail.com (Trieu Nguyen)
  */
 public class OptimizerJS {
@@ -60,17 +61,19 @@ public class OptimizerJS {
     public static void runTest() {
         // fetchAllScriptSource2();
         System.out.println("----------RUNNING TEST MODE---------");
-        String htmlSrcPath = "F:/eclipse3.5.2/workspace/place-marker-project/placemarker_android/assets/www/index.html";
+//        String htmlSrcPath = "F:/eclipse3.5.2/workspace/place-marker-project/placemarker_android/assets/www/index.html";
+        String htmlSrcPath = "/Users/trieunguyen/Documents/yopco-media/www/index.html";
         String baseDir = htmlSrcPath.substring(0, htmlSrcPath.lastIndexOf("/"));
         String[] srcs = fetchAllScriptSource(htmlSrcPath);
         String[] args = new String[srcs.length + 1];
         int i=0;
         for (String src : srcs) {
             String path = baseDir + "/" + src;
-            System.out.println(path);
+            System.out.println("#Found script: "+path);
             args[i++] = path;
         }
-        args[i] = baseDir + "/" + "production-js/all.js";
+//        args[i] = "production-js/all.js";
+        args[i] = "/Users/trieunguyen/Documents/yopco-media/www/optimized-all.js";
         new OptimizerJS().initTheApp(args);
     }
 
