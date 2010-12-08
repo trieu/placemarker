@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 import javax.swing.JFrame;
 
 /**
- *
  * @author tantrieuf31@gmail.com (Trieu Nguyen)
  */
 public class OptimizerJS {
