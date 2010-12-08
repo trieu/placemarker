@@ -15,12 +15,12 @@ import javax.swing.JFrame;
  */
 public class OptimizerJS {
 
-    public static String[] fetchAllScriptSource(String htmlFile) {
+    public static String[] fetchAllScriptSource(String htmlSrcPath) {
         ArrayList<String> list = new ArrayList<String>();
         String regex = "<script(?:[^>]*src=['\"]([^'\"]*)['\"][^>]*>|[^>]*>([^<]*)</script>)";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
-        String htmlSrc = IOHelper.loadStringFromFile(htmlFile);
+        String htmlSrc = IOHelper.loadStringFromFile(htmlSrcPath);
 //        System.out.println(htmlSrc);
 
         final Matcher matcher = pattern.matcher(htmlSrc);
@@ -29,8 +29,10 @@ public class OptimizerJS {
         }
         String[] normalJSPaths = new String[list.size()];
         int i = 0;
+        String baseDir = htmlSrcPath.substring(0, htmlSrcPath.lastIndexOf("/"));
         for (String src : list) {
-            normalJSPaths[i++] = src;
+            String path = baseDir + "/" + src;
+            normalJSPaths[i++] = path;
         }
         return normalJSPaths;
     }
@@ -57,24 +59,25 @@ public class OptimizerJS {
             System.out.println();
         }
     }
+    
+   
 
     public static void runTest() {
         // fetchAllScriptSource2();
         System.out.println("----------RUNNING TEST MODE---------");
 //        String htmlSrcPath = "F:/eclipse3.5.2/workspace/place-marker-project/placemarker_android/assets/www/index.html";
         String htmlSrcPath = "/Users/trieunguyen/Documents/yopco-media/www/index.html";
-        String baseDir = htmlSrcPath.substring(0, htmlSrcPath.lastIndexOf("/"));
-        String[] srcs = fetchAllScriptSource(htmlSrcPath);
-        String[] args = new String[srcs.length + 1];
+        
+        String[] paths = fetchAllScriptSource(htmlSrcPath);
+        String[] srcPaths = new String[paths.length + 1];
         int i=0;
-        for (String src : srcs) {
-            String path = baseDir + "/" + src;
-            System.out.println("#Found script: "+path);
-            args[i++] = path;
+        for (String path : paths) {            
+            System.out.println("#Fetching: "+path);
+            srcPaths[i++] = path;
         }
 //        args[i] = "production-js/all.js";
-        args[i] = "/Users/trieunguyen/Documents/yopco-media/www/optimized-all.js";
-        new OptimizerJS().initTheApp(args);
+        srcPaths[i] = "/Users/trieunguyen/Documents/yopco-media/www/optimized-all.js";
+        new OptimizerJS().initTheApp(srcPaths);
     }
 
     /**
