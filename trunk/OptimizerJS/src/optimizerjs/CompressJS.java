@@ -85,9 +85,10 @@ public class CompressJS {
             }
             this.txtareaLog.setText(txtareaLog.getText() + sb.toString());
             return false;
+        } else {
+            compiledSrc.append(compiler.toSource()).append("\n");
+            return true;
         }
-        compiledSrc.append(compiler.toSource()).append("\n");
-        return true;
     }
 
     public void startCompile() {
@@ -103,7 +104,9 @@ public class CompressJS {
                     break;
                 }
             }
-            int size = IOHelper.writeStringToFile(compiledSrc.toString(), productionJSPath);
+            
+            String optimizedSrcStr = compiledSrc.toString();
+            int size = IOHelper.writeStringToFile(optimizedSrcStr, productionJSPath);
             updateViewEndCompile(size);
         } else {
             throw new IllegalArgumentException("Please set normalJSPaths and productionJSPath!");
@@ -119,6 +122,9 @@ public class CompressJS {
         String s = "\n\n DONE compiling javascript files \n";
         s += (this.productionJSPath + " has the size = " + size + " KB. \n");
         this.txtareaLog.setText(txtareaLog.getText() + s);
+        if(size > 0){
+            System.exit(0);
+        }
     }
 
     @Override
