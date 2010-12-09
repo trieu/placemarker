@@ -42,6 +42,8 @@ public class OptimizerJS {
         
         String scriptTag = "<script type='text/javascript' charset='utf-8' src='optimized-all.js'></script>\n </head>";
         htmlSrc = htmlSrc.replaceAll("</head>",scriptTag);//put at the bottom head       
+        htmlSrc = htmlSrc.replaceAll("\\n", "");
+        htmlSrc = htmlSrc.replaceAll("\\t", "");
         
         IOHelper.writeStringToFile(htmlSrc, optimizedHtmlSrcPath);        
         return normalJSPaths;
