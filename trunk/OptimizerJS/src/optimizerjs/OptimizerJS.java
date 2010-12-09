@@ -95,8 +95,12 @@ public class OptimizerJS {
     public void initTheApp(String[] args) {      
         
         //set params that are set from cmd 
-        String htmlSrcPath = args[0];  
-        String destPath = args[1];
+        
+        //FIXME remove hardcode for Phonegap Project
+        String parentDirPath = IOHelper.getParentDirPath();
+        
+        String htmlSrcPath = parentDirPath + args[0];  
+        String destPath = parentDirPath + args[1];
         boolean autoCompiling = Boolean.parseBoolean(args[2]);   
         System.out.println("autoCompiling = " + autoCompiling);
         
@@ -118,6 +122,9 @@ public class OptimizerJS {
         f.setContentPane(gUI);
         f.setVisible(true);
         gUI.setVisible(true); 
+        
+        gUI.getTxtIndexFilePath().setText(htmlSrcPath);
+        gUI.getTxtOptimizedFilePath().setText(destPath);
         
     }
 }
