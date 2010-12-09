@@ -65,56 +65,59 @@ public class OptimizerJS {
     public static void runTest() {
         // fetchAllScriptSource2();
         System.out.println("----------RUNNING TEST MODE---------");
-//        String htmlSrcPath = "F:/eclipse3.5.2/workspace/place-marker-project/placemarker_android/assets/www/index.html";
-        String htmlSrcPath = "/Users/trieunguyen/Documents/yopco-media/www/index.html";
+        String[] args = new String[3];
         
-        String[] paths = fetchAllScriptSource(htmlSrcPath);
-        String[] srcPaths = new String[paths.length + 1];
-        int i=0;
-        for (String path : paths) {            
-            System.out.println("#Fetching: "+path);
-            srcPaths[i++] = path;
-        }
-//        args[i] = "production-js/all.js";
-        srcPaths[i] = "/Users/trieunguyen/Documents/yopco-media/www/optimized-all.js";
-        new OptimizerJS().initTheApp(srcPaths);
+//      args[0] = "F:/eclipse3.5.2/workspace/place-marker-project/placemarker_android/assets/www/index.html";
+        args[0] = "/Users/trieunguyen/Documents/yopco-media/www/index.html";
+               
+//      args[1] = "production-js/all.js";
+        args[1] = "/Users/trieunguyen/Documents/yopco-media/www/optimized-all.js";
+        args[2] = "false";        
+        
+        new OptimizerJS().initTheApp(args);
     }
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        if(args.length == 0){
+        int argc = args.length; 
+        if(argc == 0){
             runTest();
-        } else {
+        } else if (argc == 3) {
             new OptimizerJS().initTheApp(args);
+        } else {
+            System.out.println("Exit, wrong params, nothing to compress!");
+            System.exit(0);
         }
     }
 
-    public void initTheApp(String[] args) {
-        int argc = args.length;
-        int lastIndex = argc - 1;
-        if (lastIndex <= 0) {
-            System.out.println("Exit, nothing to compress!");
-            System.exit(0);
-        }
+    public void initTheApp(String[] args) {      
+        
+        //set params that are set from cmd 
+        String htmlSrcPath = args[0];  
+        String destPath = args[1];
+        boolean autoCompiling = Boolean.parseBoolean(args[2]);   
+        System.out.println("autoCompiling = " + autoCompiling);
+        
+        String[] normalJSPaths = fetchAllScriptSource(htmlSrcPath);
         CompressJS compressJS = new CompressJS();
-        String destPath = args[lastIndex];
-        String[] normalJSPaths = new String[lastIndex];
-        for (int i = 0; i < lastIndex; i++) {
-            normalJSPaths[i] = args[i];
-        }
+        
+        //set the important params
         compressJS.setNormalJSPaths(normalJSPaths);
         compressJS.setProductionJSPath(destPath);
+        compressJS.setAutoCompile(autoCompiling);
 
-        System.out.println("... Starting the OptimizerJS with number of params: " + argc);
+        System.out.println("... Starting the OptimizerJS with number of params: " + args.length);
         MainGUI gUI = new MainGUI();
         gUI.setCompressJS(compressJS);
         JFrame f = new JFrame("The OptimizerJS for Web");
-        f.setLocation(60, 50);
-        f.setSize(800, 550);
+        f.setLocation(80, 80);
+        f.setSize(new java.awt.Dimension(682, 422));
+        f.setResizable(false);
         f.setContentPane(gUI);
         f.setVisible(true);
-        gUI.setVisible(true);
+        gUI.setVisible(true); 
+        
     }
 }

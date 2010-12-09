@@ -21,9 +21,14 @@ public class CompressJS {
 
     //the view
     javax.swing.JTextArea txtareaLog;
+    boolean autoCompile = false;
     String[] normalJSPaths = new String[0];
     String productionJSPath = "";
     StringBuilder compiledSrc = new StringBuilder();
+
+    public CompressJS() {
+        Logger.getLogger("com.google.javascript.jscomp").setLevel(Level.OFF);
+    }
 
     public String[] getNormalJSPaths() {
         return normalJSPaths;
@@ -48,11 +53,18 @@ public class CompressJS {
     public void setTxtareaLog(JTextArea txtareaLog) {
         this.txtareaLog = txtareaLog;
         this.txtareaLog.setText(this.toString());
+        if(autoCompile){
+            startCompile();
+        }
     }
 
-    public CompressJS() {
-        Logger.getLogger("com.google.javascript.jscomp").setLevel(Level.OFF);
+    public boolean isAutoCompile() {
+        return autoCompile;
     }
+
+    public void setAutoCompile(boolean autoCompile) {
+        this.autoCompile = autoCompile;
+    }  
 
     public boolean compile(String normalJSPath, String productionJSPath) {
         System.out.println("#Compiling " + normalJSPath);
@@ -104,7 +116,7 @@ public class CompressJS {
                     break;
                 }
             }
-            
+
             String optimizedSrcStr = compiledSrc.toString();
             int size = IOHelper.writeStringToFile(optimizedSrcStr, productionJSPath);
             updateViewEndCompile(size);
@@ -122,7 +134,7 @@ public class CompressJS {
         String s = "\n\n DONE compiling javascript files \n";
         s += (this.productionJSPath + " has the size = " + size + " KB. \n");
         this.txtareaLog.setText(txtareaLog.getText() + s);
-        if(size > 0){
+        if (size > 0) {
             System.exit(0);
         }
     }
@@ -135,11 +147,15 @@ public class CompressJS {
         for (String path : normalJSPaths) {
             logStr.append(path).append("\n");
         }
-        logStr.append("#####################").append("\n\n");
+        logStr.append("#####################").append("\n");
 
         logStr.append("### Output file: \n");
         logStr.append(this.productionJSPath).append("\n");
-        logStr.append("#####################").append("\n\n");
+        logStr.append("#####################").append("\n");
+        
+        if(autoCompile){
+            logStr.append("### AUTO COMPILE MODE, start compiling ...").append("\n");
+        }
 
         return logStr.toString();
     }
