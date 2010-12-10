@@ -110,7 +110,7 @@ public class CompressJS {
                 compiledSrc = new StringBuilder();
             }
 
-            compiledSrc.append("//BUILD BY OptimizerJS, date: ").append(getCurrentDateTimeAsString()).append("\n");
+            compiledSrc.append("//BUILD BY OptimizerJS \n");
             for (String path : normalJSPaths) {
                 if (!compile(path, productionJSPath)) {
                     break;
