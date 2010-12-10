@@ -92,7 +92,7 @@ public class OptimizerJS {
         System.out.println("----------RUNNING TEST MODE---------");
         String[] args = new String[4];
 
-        args[0] = "F:/eclipse3.5.2/workspace/place-marker-project/placemarker_android/assets/www/index.html";
+        args[0] = "F:/eclipse3.5.2/workspace/place-marker-project/placemarker_android/assets/www/index2.html";
 //        args[0] = "/Users/trieunguyen/Documents/yopco-media/www/index.html";
 
 //      args[1] = "production-js/all.js";
