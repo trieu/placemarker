@@ -22,37 +22,45 @@ public class OptimizerJS {
 
         String htmlSrc = IOHelper.loadStringFromFile(htmlSrcPath);
 //        System.out.println(htmlSrc);
+        htmlSrc = htmlSrc.replaceAll("\\n", "");
+        htmlSrc = htmlSrc.replaceAll("\\t", "");
+        htmlSrc = htmlSrc.replaceAll("\\r", "");
+        //html comments
+        htmlSrc = htmlSrc.replaceAll("<!--(.*?)-->", "");
+        //for remove all css comment
+        htmlSrc = htmlSrc.replaceAll("/\\*(?:.|[\\n\\r])*?\\*/", "");
 
-        final Matcher matcher = pattern.matcher(htmlSrc);
+        Matcher matcher = pattern.matcher(htmlSrc);
         while (matcher.find()) {
             list.add(matcher.group(1));
-           
-            String scriptTag = matcher.group()+"</script>";
+
+            String scriptTag = matcher.group() + "</script>";
             htmlSrc = htmlSrc.replaceAll(scriptTag, "");
         }
+
         String[] normalJSPaths = new String[list.size()];
         int i = 0;
         String baseDir = htmlSrcPath.substring(0, htmlSrcPath.lastIndexOf("/"));
-        
-        
         for (String src : list) {
             String path = baseDir + "/" + src;
-            normalJSPaths[i++] = path;          
+            normalJSPaths[i++] = path;
         }
-        
-        
-       
+
+
         String scriptTag = "<script type='text/javascript' charset='utf-8' src='optimized-all.js'></script>\n </head>";
-        htmlSrc = htmlSrc.replaceAll("</head>",scriptTag);//put at the bottom head       
-        htmlSrc = htmlSrc.replaceAll("\\n", "");
-        htmlSrc = htmlSrc.replaceAll("\\t", "");      
-        htmlSrc = htmlSrc.replaceAll("<!--(.*?)-->", "");
-        
-        //for remove all css comment
-        htmlSrc = htmlSrc.replaceAll("/\\*(?:.|[\\n\\r])*?\\*/", "");
-        
-        
-        IOHelper.writeStringToFile(htmlSrc, optimizedHtmlSrcPath);        
+        htmlSrc = htmlSrc.replaceAll("</head>", scriptTag);//put at the bottom head
+
+
+        regex = "<link(?:[^>]*href=['\"]([^'\"]*)['\"][^>]*>|[^>]*>([^<]*))";
+        pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        matcher = pattern.matcher(htmlSrc);
+        while (matcher.find()) {
+            String cssTag = matcher.group();
+            System.out.println("cssTag: " + cssTag);
+            // htmlSrc = htmlSrc.replaceAll(cssTag, "");
+        }
+
+        IOHelper.writeStringToFile(htmlSrc, optimizedHtmlSrcPath);
         return normalJSPaths;
     }
 
@@ -78,22 +86,22 @@ public class OptimizerJS {
             System.out.println();
         }
     }
-    
-   
 
     public static void runTest() {
         // fetchAllScriptSource2();
         System.out.println("----------RUNNING TEST MODE---------");
         String[] args = new String[4];
-        
-//      args[0] = "F:/eclipse3.5.2/workspace/place-marker-project/placemarker_android/assets/www/index.html";
-        args[0] = "/Users/trieunguyen/Documents/yopco-media/www/index.html";
-               
+
+        args[0] = "F:/eclipse3.5.2/workspace/place-marker-project/placemarker_android/assets/www/index.html";
+//        args[0] = "/Users/trieunguyen/Documents/yopco-media/www/index.html";
+
 //      args[1] = "production-js/all.js";
-        args[1] = "/Users/trieunguyen/Documents/yopco-media/www/optimized-all.js";
-        args[2] = "/Users/trieunguyen/Documents/yopco-media/www/optimized-index.html";
+        //       args[1] = "/Users/trieunguyen/Documents/yopco-media/www/optimized-all.js";
+//        args[2] = "/Users/trieunguyen/Documents/yopco-media/www/optimized-index.html";
+        args[1] = "F:/eclipse3.5.2/workspace/place-marker-project/placemarker_android/assets/www/optimized-all.js";
+        args[2] = "F:/eclipse3.5.2/workspace/place-marker-project/placemarker_android/assets/www/optimized-index.html";
         args[3] = "false";
-        
+
         new OptimizerJS().initTheApp(args);
     }
 
@@ -101,8 +109,8 @@ public class OptimizerJS {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        int argc = args.length; 
-        if(argc == 0){
+        int argc = args.length;
+        if (argc == 0) {
             runTest();
         } else if (argc == 4) {
             new OptimizerJS().initTheApp(args);
@@ -112,26 +120,23 @@ public class OptimizerJS {
         }
     }
 
-    public void initTheApp(String[] args) {      
-        
-                    
+    public void initTheApp(String[] args) {
         String parentDirPath = "";
-        
+
         //FIXME remove hardcode for Phonegap Project
-        if(args[0].startsWith("/yopco-media/www/")){
-           parentDirPath = IOHelper.getParentDirPath();
+        if (args[0].startsWith("/yopco-media/www/")) {
+            parentDirPath = IOHelper.getParentDirPath();
         }
-        
         //set params that are set from cmd 
-        String htmlSrcPath = parentDirPath + args[0];  
+        String htmlSrcPath = parentDirPath + args[0];
         String destJSPath = parentDirPath + args[1];
         String destHTMLPath = parentDirPath + args[2];
-        boolean autoCompiling = Boolean.parseBoolean(args[3]);   
+        boolean autoCompiling = Boolean.parseBoolean(args[3]);
         System.out.println("autoCompiling = " + autoCompiling);
-        
-        String[] normalJSPaths = fetchAndOptimizeRawSource(htmlSrcPath,destHTMLPath);
+
+        String[] normalJSPaths = fetchAndOptimizeRawSource(htmlSrcPath, destHTMLPath);
         CompressJS compressJS = new CompressJS();
-        
+
         //set the important params
         compressJS.setNormalJSPaths(normalJSPaths);
         compressJS.setProductionJSPath(destJSPath);
@@ -146,10 +151,10 @@ public class OptimizerJS {
         f.setResizable(false);
         f.setContentPane(gUI);
         f.setVisible(true);
-        gUI.setVisible(true); 
-        
+        gUI.setVisible(true);
+
         gUI.getTxtIndexFilePath().setText(htmlSrcPath);
         gUI.getTxtOptimizedFilePath().setText(destHTMLPath);
-        
+
     }
 }
