@@ -32,7 +32,7 @@ function mapLoaded(node) {
 }
 
 function showMap(node,params){
-	var map_url = "http://drd-vn-database.com/mobile/v_map_mobile.html?" + params;
+	var map_url = "http://tantrieuf31.summerhost.info/placemarker/v_map_mobile.html?" + params;
 	$(node).attr('src',map_url).show();
 }
 
@@ -44,7 +44,7 @@ function onDeviceReady() {
 
     var success = function(rs){  };
     var fail = function(rs){  }; 
-    PhoneGap.exec(success, fail, "MarkerManager", "sayHi", ['Trieu']);
+    //PhoneGap.exec(success, fail, "MarkerManager", "sayHi", ['Trieu']);
 }
 
 function onLocationChanged(latitude, longitude ) {

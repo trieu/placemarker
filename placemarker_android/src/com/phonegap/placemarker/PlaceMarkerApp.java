@@ -8,6 +8,7 @@ import com.placemarker.MarkerManager;
 public class PlaceMarkerApp extends DroidGap {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+
 		super.onCreate(savedInstanceState);
 		super.loadUrl("file:///android_asset/www/index.html");
 		addService("MarkerManager", MarkerManager.class.getName());
