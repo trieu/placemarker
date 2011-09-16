@@ -92,14 +92,14 @@ public class OptimizerJS {
         System.out.println("----------RUNNING TEST MODE---------");
         String[] args = new String[4];
 
-        args[0] = "F:/eclipse3.5.2/workspace/place-marker-project/placemarker_android/assets/www/index2.html";
+        args[0] = "D:/xampp/htdocs/test-tank.html";
 //        args[0] = "/Users/trieunguyen/Documents/yopco-media/www/index.html";
 
 //      args[1] = "production-js/all.js";
         //       args[1] = "/Users/trieunguyen/Documents/yopco-media/www/optimized-all.js";
 //        args[2] = "/Users/trieunguyen/Documents/yopco-media/www/optimized-index.html";
-        args[1] = "F:/eclipse3.5.2/workspace/place-marker-project/placemarker_android/assets/www/optimized-all.js";
-        args[2] = "F:/eclipse3.5.2/workspace/place-marker-project/placemarker_android/assets/www/optimized-index.html";
+        args[1] = "Y:/plugins.banbe.net/public/static/js/fosp-all.js";
+        args[2] = "D:/xampp/htdocs/test-tank.html";
         args[3] = "false";
 
         new OptimizerJS().initTheApp(args);
