@@ -46,7 +46,6 @@ public class MarkerManager extends Plugin {
 
 
 
-	@Override
 	public void setContext(DroidGap droidGap) {
 		ctx = droidGap;
 	}
